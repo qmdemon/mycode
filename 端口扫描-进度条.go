@@ -24,7 +24,7 @@ var (
 
 func worker(ports, results chan int) {
 	for p := range ports {
-		address := fmt.Sprintf("127.0.0.1:%d", p)
+		address := fmt.Sprintf("%s:%d",ip, p)
 
 		//fmt.Println(address)
 
@@ -48,6 +48,7 @@ func worker(ports, results chan int) {
 func Init() {
 	flag.StringVar(&ip, "ip", "", "扫描IP地址")
 	flag.IntVar(&thread, "thread", 200, "扫描线程数")
+	flag.Parse()
 }
 
 func main() {
