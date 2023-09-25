@@ -139,11 +139,14 @@ def main():
     queueLock.release()
 
     # 等待队列清空
-    while not workQueue.empty():
-        # pass
-        timer = Timer(0.5, update_progress)  #定时器
-        timer.start()
-        timer.join()
+    try:
+        while not workQueue.empty():
+            # pass
+            timer = Timer(0.5, update_progress)  #定时器
+            timer.start()
+            timer.join()
+    except KeyboardInterrupt:
+        exitFlag = 1
         
     # 通知线程是时候退出
     exitFlag = 1
