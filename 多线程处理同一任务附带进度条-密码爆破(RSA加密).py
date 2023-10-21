@@ -84,7 +84,7 @@ def process_data(q):
                 # 对text 进行url 编码
                 # postdata = 'type=1&text='+urllib.parse.quote(text)+'&sys=patrol&sysVersion=&operSys=Windows&client=Chrome%3A%20105.0.5195.127&code=&codeKey='
                 uri="http://127.0.0.1"
-                
+
                 resp = requests.post(url=uri,json=data,headers=headers)
                 resp.encoding = resp.apparent_encoding
                 # print(resp.text)
@@ -93,7 +93,7 @@ def process_data(q):
                     # break
                     # 爆破完成退出线程
                     # exitFlag = 1
-                    # workQueue.queue.clear()                
+                    # workQueue.queue.clear()
             except Exception as e:
                 # pass
                 print(nowdata,e,'\033[K')
@@ -103,16 +103,16 @@ def process_data(q):
 
             finally:
                 count += 1
-                
+
         else:
             queueLock.release()
-        
+
 # 进度条显示
 def update_progress():
         # global count, bar, percentage
         bar = int(bar_width*count/totleNum)
         percentage = int((count/totleNum)*100)
-        print(f'正在爆破密码: {queue_data}   [{"█"*bar}{" "*(bar_width-bar)}] {percentage}％','\033[K', end='\r', flush=True)
+        print(f'正在爆破密码: {queue_data}   ({count}/{totleNum})[{"█"*bar}{" "*(bar_width-bar)}] {percentage}％','\033[K', end='\r', flush=True)
 
 def main():
     global threadNum,exitFlag,threadID,totleNum
@@ -122,7 +122,7 @@ def main():
 
     # passlist = ["123456","admin"]
 
-    threadNum = 10
+
 
     totleNum = len(passlist)
     # 创建新线程
@@ -139,12 +139,14 @@ def main():
     queueLock.release()
 
     # 等待队列清空
-    while not workQueue.empty():
-        # pass
-        timer = Timer(0.5, update_progress)  #定时器
-        timer.start()
-        timer.join()
-        
+    try:
+        while not workQueue.empty():
+            # pass
+            timer = Timer(0.5, update_progress)  #定时器
+            timer.start()
+    except KeyboardInterrupt:
+        exitFlag = 1
+
     # 通知线程是时候退出
     exitFlag = 1
 
