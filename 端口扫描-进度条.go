@@ -43,7 +43,7 @@ func worker(i string, ports, results chan int) {
 		defer coon.Close()
 
 		// 发送数据
-		msg := "Hello, Server!"
+		msg := "GET / HTTP/1.1\r\n\r\n"
 		_, err = coon.Write([]byte(msg))
 		if err != nil {
 			fmt.Println("\033[31m", address, "开放 \033[0m", "发送数据失败", "\033[K")
@@ -63,7 +63,7 @@ func worker(i string, ports, results chan int) {
 		}
 
 		banner := strings.ReplaceAll(string(buf[:n]), "\n", "\\n")
-		banner = strings.ReplaceAll(banner, "\r", "")
+		banner = strings.ReplaceAll(banner, "\r", "\\r")
 		fmt.Println("\033[31m", address, "开放 \033[0m", banner, "\033[K")
 		results <- p
 
