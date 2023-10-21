@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"net"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -74,6 +75,11 @@ func Init() {
 	flag.IntVar(&thread, "thread", 200, "扫描线程数")
 	flag.Float64Var(&timeout, "timeout", 1, "设置端口连接超时时间,单位秒")
 	flag.Parse()
+	if ip == "" {
+		fmt.Println("The parameter is empty. Here is the usage:")
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
 }
 
 func main() {
