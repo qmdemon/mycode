@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"net"
 	"os"
 	"strconv"
@@ -43,7 +44,7 @@ func worker(i string, ports, results chan int) {
 		defer coon.Close()
 
 		// 发送数据
-		msg := "GET / HTTP/1.1\r\n\r\n"
+		msg := fmt.Sprintf("GET / HTTP/1.1\r\nHost: %s\r\nUser-Agent: Mozilla/5.0\r\nConnection: close\r\n\r\n", address)
 		_, err = coon.Write([]byte(msg))
 		if err != nil {
 			fmt.Println("\033[31m", address, "开放 \033[0m", "发送数据失败", "\033[K")
@@ -56,7 +57,7 @@ func worker(i string, ports, results chan int) {
 		// 获取响应
 		buf := make([]byte, 1024)
 		n, err := coon.Read(buf)
-		if err != nil {
+		if err != nil && err != io.EOF {
 			fmt.Println("\033[31m", address, "开放 \033[0m", "获取banner失败", err, "\033[K")
 			results <- p
 			continue
